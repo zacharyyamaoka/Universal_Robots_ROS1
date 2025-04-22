@@ -18,7 +18,7 @@
   <url type="bugtracker">https://github.com/ros-industrial/universal_robot/issues</url>
   <url type="repository">https://github.com/ros-industrial/universal_robot</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>ur10e_moveit_config</exec_depend>
   <exec_depend>ur10_moveit_config</exec_depend>
@@ -35,10 +35,6 @@
   <exec_depend>ur_gazebo</exec_depend>
 
   <export>
-    <metapackage/>
-    <architecture_independent/>
-    <ros_industrial>
-      <support_level value="community" />
-    </ros_industrial>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>

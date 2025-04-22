@@ -133,9 +133,12 @@ install(DIRECTORY include/
   DESTINATION include
 )
 
-install(FILES ur_moveit_plugins.xml
-  DESTINATION share/${PROJECT_NAME}
-)
+# install(FILES ur_moveit_plugins.xml
+#   DESTINATION share/${PROJECT_NAME}
+# )
+
+pluginlib_export_plugin_description_file(
+  moveit_core ur_moveit_plugins.xml)
 
 ament_export_targets(${PROJECT_NAME}Targets HAS_LIBRARY_TARGET)
 
