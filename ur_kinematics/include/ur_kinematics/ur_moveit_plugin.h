@@ -76,18 +76,18 @@
 #define UR_KINEMATICS_PLUGIN_
 
 // ROS
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 #include <random_numbers/random_numbers.h>
 
 // System
 #include <boost/shared_ptr.hpp>
 
 // ROS msgs
-#include <geometry_msgs/PoseStamped.h>
-#include <moveit_msgs/GetPositionFK.h>
-#include <moveit_msgs/GetPositionIK.h>
-#include <moveit_msgs/KinematicSolverInfo.h>
-#include <moveit_msgs/MoveItErrorCodes.h>
+#include "geometry_msgs/msg/pose_stamped.hpp"
+#include "moveit_msgs/srv/get_position_fk.hpp"
+#include "moveit_msgs/srv/get_position_ik.hpp"
+#include "moveit_msgs/msg/kinematic_solver_info.hpp"
+#include "moveit_msgs/msg/move_it_error_codes.hpp"
 
 // KDL
 #include <kdl/jntarray.hpp>
@@ -97,9 +97,11 @@
 #include <moveit/kdl_kinematics_plugin/joint_mimic.hpp>
 
 // MoveIt!
-#include <moveit/kinematics_base/kinematics_base.h>
-#include <moveit/robot_model/robot_model.h>
-#include <moveit/robot_state/robot_state.h>
+#include <moveit/kinematics_base/kinematics_base.hpp>
+#include <moveit/robot_model/robot_model.hpp>
+#include <moveit/robot_state/robot_state.hpp>
+
+#include "ur_kinematics/ur_kinematics_parameters.hpp"
 
 namespace ur_kinematics
 {
@@ -115,49 +117,50 @@ namespace ur_kinematics
 */
     URKinematicsPlugin();
 
-    virtual bool getPositionIK(const geometry_msgs::Pose &ik_pose,
+    virtual bool getPositionIK(const geometry_msgs::msg::Pose &ik_pose,
                                const std::vector<double> &ik_seed_state,
                                std::vector<double> &solution,
-                               moveit_msgs::MoveItErrorCodes &error_code,
+                               moveit_msgs::msg::MoveItErrorCodes &error_code,
                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
-    virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
+    virtual bool searchPositionIK(const geometry_msgs::msg::Pose &ik_pose,
                                   const std::vector<double> &ik_seed_state,
                                   double timeout,
                                   std::vector<double> &solution,
-                                  moveit_msgs::MoveItErrorCodes &error_code,
+                                  moveit_msgs::msg::MoveItErrorCodes &error_code,
                                   const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
-    virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
+    virtual bool searchPositionIK(const geometry_msgs::msg::Pose &ik_pose,
                                   const std::vector<double> &ik_seed_state,
                                   double timeout,
                                   const std::vector<double> &consistency_limits,
                                   std::vector<double> &solution,
-                                  moveit_msgs::MoveItErrorCodes &error_code,
+                                  moveit_msgs::msg::MoveItErrorCodes &error_code,
                                   const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
-    virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
+    virtual bool searchPositionIK(const geometry_msgs::msg::Pose &ik_pose,
                                   const std::vector<double> &ik_seed_state,
                                   double timeout,
                                   std::vector<double> &solution,
                                   const IKCallbackFn &solution_callback,
-                                  moveit_msgs::MoveItErrorCodes &error_code,
+                                  moveit_msgs::msg::MoveItErrorCodes &error_code,
                                   const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
-    virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
+    virtual bool searchPositionIK(const geometry_msgs::msg::Pose &ik_pose,
                                   const std::vector<double> &ik_seed_state,
                                   double timeout,
                                   const std::vector<double> &consistency_limits,
                                   std::vector<double> &solution,
                                   const IKCallbackFn &solution_callback,
-                                  moveit_msgs::MoveItErrorCodes &error_code,
+                                  moveit_msgs::msg::MoveItErrorCodes &error_code,
                                   const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
     virtual bool getPositionFK(const std::vector<std::string> &link_names,
                                const std::vector<double> &joint_angles,
-                               std::vector<geometry_msgs::Pose> &poses) const;
+                               std::vector<geometry_msgs::msg::Pose> &poses) const;
 
-    virtual bool initialize(const moveit::core::RobotModel& robot_model,
+    virtual bool initialize(const rclcpp::Node::SharedPtr& node,
+                            const moveit::core::RobotModel& robot_model,
                             const std::string& group_name,
                             const std::string& base_frame,
                             const std::vector<std::string>& tip_frames,
@@ -191,12 +194,12 @@ namespace ur_kinematics
 * @param consistency_limit The returned solutuion will contain a value for the redundant joint in the range [seed_state(redundancy_limit)-consistency_limit,seed_state(redundancy_limit)+consistency_limit]
 * @return True if a valid solution was found, false otherwise
 */
-    bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
+    bool searchPositionIK(const geometry_msgs::msg::Pose &ik_pose,
                           const std::vector<double> &ik_seed_state,
                           double timeout,
                           std::vector<double> &solution,
                           const IKCallbackFn &solution_callback,
-                          moveit_msgs::MoveItErrorCodes &error_code,
+                          moveit_msgs::msg::MoveItErrorCodes &error_code,
                           const std::vector<double> &consistency_limits,
                           const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
@@ -204,7 +207,7 @@ namespace ur_kinematics
 
   private:
 
-    bool timedOut(const ros::WallTime &start_time, double duration) const;
+    bool timedOut(const rclcpp::Time& start_time, double duration) const;
 
 
     /** @brief Check whether the solution lies within the consistency limit of the seed state
@@ -239,9 +242,9 @@ namespace ur_kinematics
 
     bool active_; /** Internal variable that indicates whether solvers are configured and ready */
 
-    moveit_msgs::KinematicSolverInfo ik_chain_info_; /** Stores information for the inverse kinematics solver */
+    moveit_msgs::msg::KinematicSolverInfo ik_chain_info_; /** Stores information for the inverse kinematics solver */
 
-    moveit_msgs::KinematicSolverInfo fk_chain_info_; /** Store information for the forward kinematics solver */
+    moveit_msgs::msg::KinematicSolverInfo fk_chain_info_; /** Store information for the forward kinematics solver */
 
     KDL::Chain kdl_chain_;
 
@@ -251,14 +254,14 @@ namespace ur_kinematics
 
     mutable random_numbers::RandomNumberGenerator random_number_generator_;
 
-    robot_state::RobotStatePtr state_, state_2_;
+    moveit::core::RobotStatePtr state_, state_2_;
 
     int num_possible_redundant_joints_;
     std::vector<unsigned int> redundant_joints_map_index_;
 
     // Storage required for when the set of redundant joints is reset
     bool position_ik_; //whether this solver is only being used for position ik
-    const robot_model::JointModelGroup* joint_model_group_;
+    const moveit::core::JointModelGroup* joint_model_group_;
     double max_solver_iterations_;
     double epsilon_;
     std::vector<kdl_kinematics_plugin::JointMimic> mimic_joints_;
@@ -273,6 +276,14 @@ namespace ur_kinematics
     // UR base link, and the UR tip link to the group tip link
     KDL::Chain kdl_base_chain_;
     KDL::Chain kdl_tip_chain_;
+
+
+  rclcpp::Node::SharedPtr node_;
+
+  std::shared_ptr<ur_kinematics::ParamListener> param_listener_;
+  ur_kinematics::Params params_;
+
+  rclcpp::Clock::SharedPtr clock_;
 
   };
 }

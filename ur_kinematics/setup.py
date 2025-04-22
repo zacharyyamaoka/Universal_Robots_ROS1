@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
-from catkin_pkg.python_setup import generate_distutils_setup
+from setuptools import setup
 
-d = generate_distutils_setup(
-   ##  don't do this unless you want a globally visible script
-   # scripts=['bin/myscript'], 
-   packages=['ur_kinematics'],
-   package_dir={'': 'src'}
+package_name = 'ur_kinematics'
+
+setup(
+    name=package_name,
+    version='1.4.0',
+    packages=[package_name],
+    package_dir={'': 'src'},
+    install_requires=['setuptools'],
+    zip_safe=True,
+    maintainer='G.A. vd. Hoorn',
+    maintainer_email='g.a.vanderhoorn@tudelft.nl',
+    description='UR forward and inverse kinematics.',
+    license='BSD',
 )
-
-setup(**d)

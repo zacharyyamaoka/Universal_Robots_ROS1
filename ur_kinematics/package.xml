@@ -17,18 +17,18 @@
   <url type="bugtracker">https://github.com/ros-industrial/universal_robot/issues</url>
   <url type="repository">https://github.com/ros-industrial/universal_robot</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>pluginlib</depend>
+  <depend>tf2_geometry_msgs</depend>
   <depend>moveit_core</depend>
   <depend>moveit_kinematics</depend>
   <depend>moveit_ros_planning</depend>
-  <depend>roscpp</depend>
-  <depend>geometry_msgs</depend>
-  <depend>pluginlib</depend>
-  <depend>tf_conversions</depend>
   <depend>boost</depend>
 
-  <exec_depend>rospy</exec_depend>
+  <exec_depend>rclpy</exec_depend>
 
   <export>
     <moveit_core plugin="${prefix}/ur_moveit_plugins.xml"/>

@@ -1,0 +1,29 @@
+ur_kinematics:
+  max_solver_iterations:
+    type: int
+    default_value: 500
+    description: "Maximum solver iterations"
+    validation:
+      gt_eq<>: [0]
+
+  epsilon:
+    type: double
+    default_value: 1.0e-5
+    description: "Solver convergence tolerance"
+    validation:
+      gt<>: [0.0]
+
+  position_only_ik:
+    type: bool
+    default_value: false
+    description: "If true, use position-only IK (ignores orientation)"
+
+  ik_weights:
+    type: double_array
+    default_value: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    description: "Weights for redundant joint solution filtering (6 DOF)"
+
+  arm_prefix:
+    type: string
+    default_value: ""
+    description: "Prefix for URDF joint/link names (used for distinguishing multiple arms)"
