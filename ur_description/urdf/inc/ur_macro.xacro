@@ -361,6 +361,14 @@
       <dynamics damping="0" friction="0"/>
     </joint>
 
+    <!-- https://github.com/ros-industrial/universal_robot/pull/506/files -->
+    <link name="${prefix}ee_link"/>
+    <joint name="${prefix}ee_fixed_joint" type="fixed">
+      <parent link="${prefix}wrist_3_link" />
+      <child link="${prefix}ee_link" />
+      <origin xyz="0 0 0" rpy="0.0 ${-pi/2.0} ${pi/2.0}" />
+    </joint>
+    
     <!-- ROS-Industrial 'base' frame: base_link to UR 'Base' Coordinates transform -->
     <link name="${prefix}base"/>
     <joint name="${prefix}base_link-base_fixed_joint" type="fixed">

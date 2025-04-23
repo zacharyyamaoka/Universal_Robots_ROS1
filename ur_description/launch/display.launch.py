@@ -3,12 +3,7 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 
-# ros2 launch bam_descriptions display.launch.py model:='urdf/hybrid_v1/hybrid_v1.urdf.xacro'
-# ros2 launch bam_descriptions display.launch.py model:='urdf/gripper_v1/gripper_v1.urdf.xacro'
-# ros2 launch bam_descriptions display.launch.py model:='robots/hybrid_v1_gripper_v1.urdf.xacro'
-# ros2 launch bam_descriptions display.launch.py model:='robots/rack.urdf.xacro'
-# ros2 launch bam_descriptions display.launch.py model:='urdf/dynamics_dev/dynamics_dev_v1.urdf.xacro'
-# ros2 launch bam_descriptions display.launch.py model:='models/Rig/model.urdf' package:="view_sdf_rviz"
+# ros2 launch ur_description display.launch.py 
 def generate_launch_description():
     ld = LaunchDescription()
 

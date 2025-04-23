@@ -58,55 +58,55 @@ set_target_properties(ur20_kin PROPERTIES COMPILE_DEFINITIONS "UR20_PARAMS")
 add_library(ur30_kin src/ur_kin.cpp)
 set_target_properties(ur30_kin PROPERTIES COMPILE_DEFINITIONS "UR30_PARAMS")
 
-add_library(ur3_moveit_plugin src/ur_moveit_plugin.cpp)
+add_library(ur3_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(ur3_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR3_PARAMS")
 target_link_libraries(ur3_moveit_plugin ur3_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
 ament_target_dependencies(ur3_moveit_plugin
   rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
 
-add_library(ur3e_moveit_plugin src/ur_moveit_plugin.cpp)
+add_library(ur3e_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(ur3e_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR3e_PARAMS")
 target_link_libraries(ur3e_moveit_plugin ur3e_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
 ament_target_dependencies(ur3e_moveit_plugin
   rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
 
-add_library(ur5_moveit_plugin src/ur_moveit_plugin.cpp)
+add_library(ur5_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(ur5_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR5_PARAMS")
 target_link_libraries(ur5_moveit_plugin ur5_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
 ament_target_dependencies(ur5_moveit_plugin
   rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
 
-add_library(ur5e_moveit_plugin src/ur_moveit_plugin.cpp)
+add_library(ur5e_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(ur5e_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR5e_PARAMS")
 target_link_libraries(ur5e_moveit_plugin ur5e_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
 ament_target_dependencies(ur5e_moveit_plugin
   rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
 
-add_library(ur10_moveit_plugin src/ur_moveit_plugin.cpp)
+add_library(ur10_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(ur10_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR10_PARAMS")
 target_link_libraries(ur10_moveit_plugin ur10_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
 ament_target_dependencies(ur10_moveit_plugin
   rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
 
-add_library(ur10e_moveit_plugin src/ur_moveit_plugin.cpp)
+add_library(ur10e_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(ur10e_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR10e_PARAMS")
 target_link_libraries(ur10e_moveit_plugin ur10e_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
 ament_target_dependencies(ur10e_moveit_plugin
   rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
 
-add_library(ur16e_moveit_plugin src/ur_moveit_plugin.cpp)
+add_library(ur16e_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(ur16e_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR16e_PARAMS")
 target_link_libraries(ur16e_moveit_plugin ur16e_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
 ament_target_dependencies(ur16e_moveit_plugin
   rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
 
-add_library(ur20_moveit_plugin src/ur_moveit_plugin.cpp)
+add_library(ur20_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(ur20_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR20_PARAMS")
 target_link_libraries(ur20_moveit_plugin ur20_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
 ament_target_dependencies(ur20_moveit_plugin
   rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
 
-add_library(ur30_moveit_plugin src/ur_moveit_plugin.cpp)
+add_library(ur30_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(ur30_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR30_PARAMS")
 target_link_libraries(ur30_moveit_plugin ur30_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
 ament_target_dependencies(ur30_moveit_plugin

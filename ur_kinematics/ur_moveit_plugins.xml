@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
-<library path="lib/libur3_moveit_plugin">
+<library path="ur3_moveit_plugin">
   <class name="ur_kinematics/UR3KinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
       Analytic kinematics for the Universal Robots UR3.
@@ -10,7 +10,7 @@
   </class>
 </library>
 
-<library path="lib/libur3e_moveit_plugin">
+<library path="ur3e_moveit_plugin">
   <class name="ur_kinematics/UR3eKinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
       Analytic kinematics for the Universal Robots UR3e.
@@ -20,7 +20,7 @@
   </class>
 </library>
 
-<library path="lib/libur5_moveit_plugin">
+<library path="ur5_moveit_plugin">
   <class name="ur_kinematics/UR5KinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
       Analytic kinematics for the Universal Robots UR5.
@@ -30,7 +30,7 @@
   </class>
 </library>
 
-<library path="lib/libur5e_moveit_plugin">
+<library path="ur5e_moveit_plugin">
   <class name="ur_kinematics/UR5eKinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
       Analytic kinematics for the Universal Robots UR5e.
@@ -40,7 +40,7 @@
   </class>
 </library>
 
-<library path="lib/libur10_moveit_plugin">
+<library path="ur10_moveit_plugin">
   <class name="ur_kinematics/UR10KinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
       Analytic kinematics for the Universal Robots UR10.
@@ -50,7 +50,7 @@
   </class>
 </library>
 
-<library path="lib/libur10e_moveit_plugin">
+<library path="ur10e_moveit_plugin">
   <class name="ur_kinematics/UR10eKinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
       Analytic kinematics for the Universal Robots UR10e.
@@ -60,7 +60,7 @@
   </class>
 </library>
 
-<library path="lib/libur16e_moveit_plugin">
+<library path="ur16e_moveit_plugin">
   <class name="ur_kinematics/UR16eKinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
       Analytic kinematics for the Universal Robots UR16e.
@@ -70,7 +70,7 @@
   </class>
 </library>
 
-<library path="lib/libur20_moveit_plugin">
+<library path="ur20_moveit_plugin">
   <class name="ur_kinematics/UR20KinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
       Analytic kinematics for the Universal Robots UR20.
@@ -80,7 +80,7 @@
   </class>
 </library>
 
-<library path="lib/libur30_moveit_plugin">
+<library path="ur30_moveit_plugin">
   <class name="ur_kinematics/UR30KinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
       Analytic kinematics for the Universal Robots UR30.
