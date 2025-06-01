@@ -31,6 +31,11 @@ generate_parameter_library(
   src/ur_kinematics_parameters.yaml
 )
 
+
+
+add_library(bam_arm_kin src/ur_kin.cpp)
+set_target_properties(bam_arm_kin PROPERTIES COMPILE_DEFINITIONS "BAM_ARM_PARAMS")
+
 add_library(ur3_kin src/ur_kin.cpp)
 set_target_properties(ur3_kin PROPERTIES COMPILE_DEFINITIONS "UR3_PARAMS")
 
@@ -57,6 +62,12 @@ set_target_properties(ur20_kin PROPERTIES COMPILE_DEFINITIONS "UR20_PARAMS")
 
 add_library(ur30_kin src/ur_kin.cpp)
 set_target_properties(ur30_kin PROPERTIES COMPILE_DEFINITIONS "UR30_PARAMS")
+
+add_library(bam_arm_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
+set_target_properties(bam_arm_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "BAM_ARM_PARAMS")
+target_link_libraries(bam_arm_moveit_plugin bam_arm_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
+ament_target_dependencies(bam_arm_moveit_plugin
+  rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
 
 add_library(ur3_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(ur3_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR3_PARAMS")

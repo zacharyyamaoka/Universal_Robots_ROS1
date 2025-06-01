@@ -1,5 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
+
+<library path="bam_arm_moveit_plugin">
+  <class name="bam_kinematics/BamArmKinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>
+      Analytic kinematics for the BAM Arm.
+    </description>
+  </class>
+</library>
+
 <library path="ur3_moveit_plugin">
   <class name="ur_kinematics/UR3KinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>

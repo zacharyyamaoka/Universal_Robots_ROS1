@@ -682,22 +682,91 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
 
     // Do the analytic IK
     std::array<bool, 8> sol_success;
+    // TODO mabye edit the desired 6th joint to make sure its correct
     num_sols = inverse((double*) homo_ik_pose, (double*) q_ik_sols, sol_success, jnt_pos_test(ur_joint_inds_start_+5));
-    RCLCPP_INFO(getLogger(), "Analytic IK returned %d raw solutions:", num_sols);
+    std::ostringstream oss;
+    oss << "\nAnalytic IK returned " << num_sols << " raw solutions:\n";
     for (int i = 0; i < 8; ++i) {
       if (sol_success[i]) {
-        RCLCPP_INFO(getLogger(), "  Solution %d: [%1.5f, %1.5f, %1.5f, %1.5f, %1.5f, %1.5f]",
-                    i,
-                    q_ik_sols[i][0],
-                    q_ik_sols[i][1],
-                    q_ik_sols[i][2],
-                    q_ik_sols[i][3],
-                    q_ik_sols[i][4],
-                    q_ik_sols[i][5]);
+        oss << "  Solution " << i << ": ["
+            << std::fixed << std::setprecision(5)
+            << q_ik_sols[i][0] << ", "
+            << q_ik_sols[i][1] << ", "
+            << q_ik_sols[i][2] << ", "
+            << q_ik_sols[i][3] << ", "
+            << q_ik_sols[i][4] << ", "
+            << q_ik_sols[i][5] << "]\n";
       } else {
-        RCLCPP_INFO(getLogger(), "  Solution %d: None ", i);
+        oss << "  Solution " << i << ": None\n";
       }
     }
+    RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
+
+
+    // Loop through all 8 solutions
+    // Loop through each joint
+    // Make sure each joint is within limit (wrap joint if needed and update solution)
+    // This is a nice general way to deal with joint wrapping and limits
+    std::vector< std::vector<double> > q_ik_valid_sols;
+    for(uint16_t i=0; i<8; i++)
+    {
+      bool valid = true;
+      std::vector< double > valid_solution;
+      valid_solution.assign(6,0.0);
+
+      // Closed-form IK often returns solutions in [0, 2π], while many robots define joint limits in [-π, π] or similar.
+      for(uint16_t j=0; j<6; j++)
+      {
+        if((q_ik_sols[i][j] <= ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j] >= ik_chain_info_.limits[j].min_position))
+        {
+          // q_ik_sols[i][j] = q_ik_sols[i][j];
+          continue;
+        }
+        else if ((q_ik_sols[i][j] > ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j]-2*M_PI > ik_chain_info_.limits[j].min_position))
+        {
+          q_ik_sols[i][j] = q_ik_sols[i][j]-2*M_PI;
+          continue;
+        }
+        else if ((q_ik_sols[i][j] < ik_chain_info_.limits[j].min_position) && (q_ik_sols[i][j]+2*M_PI < ik_chain_info_.limits[j].max_position))
+        {
+          q_ik_sols[i][j] = q_ik_sols[i][j]+2*M_PI;
+          continue;
+        }
+        else
+        {
+          sol_success[i] = false;
+          num_sols -= 1;
+          break;
+        }
+      }
+      
+      if (sol_success[i]) {
+        // convert double list to vector, std::vector<double>(pointer_to_begin, pointer_to_end);
+        q_ik_valid_sols.emplace_back(q_ik_sols[i], q_ik_sols[i] + 6);
+
+      }
+
+    }
+
+
+    oss.str("");
+    oss.clear();
+    oss << "\nAfter wrapping " << num_sols << " solutions:\n";
+    for (int i = 0; i < 8; ++i) {
+      if (sol_success[i]) {
+        oss << "  Solution " << i << ": ["
+            << std::fixed << std::setprecision(5)
+            << q_ik_sols[i][0] << ", "
+            << q_ik_sols[i][1] << ", "
+            << q_ik_sols[i][2] << ", "
+            << q_ik_sols[i][3] << ", "
+            << q_ik_sols[i][4] << ", "
+            << q_ik_sols[i][5] << "]\n";
+      } else {
+        oss << "  Solution " << i << ": None\n";
+      }
+    }
+    RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
 
     // TODO Make it dynamic
     #ifdef RIGHT_PRIORITY
@@ -710,49 +779,6 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
     }
     RCLCPP_INFO(getLogger(), "Returning manual raw solution index: %d", manual_index);
     return true;
-
-    uint16_t num_valid_sols;
-    std::vector< std::vector<double> > q_ik_valid_sols;
-    for(uint16_t i=0; i<num_sols; i++)
-    {
-      bool valid = true;
-      std::vector< double > valid_solution;
-      valid_solution.assign(6,0.0);
-
-      // Closed-form IK often returns solutions in [0, 2π], while many robots define joint limits in [-π, π] or similar.
-      for(uint16_t j=0; j<6; j++)
-      {
-        if((q_ik_sols[i][j] <= ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j] >= ik_chain_info_.limits[j].min_position))
-        {
-          valid_solution[j] = q_ik_sols[i][j];
-          valid = true;
-          continue;
-        }
-        else if ((q_ik_sols[i][j] > ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j]-2*M_PI > ik_chain_info_.limits[j].min_position))
-        {
-          valid_solution[j] = q_ik_sols[i][j]-2*M_PI;
-          valid = true;
-          continue;
-        }
-        else if ((q_ik_sols[i][j] < ik_chain_info_.limits[j].min_position) && (q_ik_sols[i][j]+2*M_PI < ik_chain_info_.limits[j].max_position))
-        {
-          valid_solution[j] = q_ik_sols[i][j]+2*M_PI;
-          valid = true;
-          continue;
-        }
-        else
-        {
-          valid = false;
-          break;
-        }
-      }
-
-      if(valid)
-      {
-        q_ik_valid_sols.push_back(valid_solution);
-      }
-    }
-
 
     // use weighted absolute deviations to determine the solution closest the seed state
     std::vector<idx_double> weighted_diffs;
