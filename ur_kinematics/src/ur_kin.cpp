@@ -255,6 +255,12 @@ namespace ur_kinematics {
   }
 
   int inverse(const double* T, double* q_sols, double q6_des) {
+
+    // std::array<std::array<double, 6>, 8> solution_array;
+    // for (auto& sol : solution_array) {
+    //   sol.fill(std::numeric_limits<double>::quiet_NaN());
+    // }
+  
     int num_sols = 0;
     double T02 = -*T; T++; double T00 =  *T; T++; double T01 =  *T; T++; double T03 = -*T; T++; 
     double T12 = -*T; T++; double T10 =  *T; T++; double T11 =  *T; T++; double T13 = -*T; T++; 
@@ -392,6 +398,9 @@ namespace ur_kinematics {
             q_sols[num_sols*6+0] = q1[i];    q_sols[num_sols*6+1] = q2[k]; 
             q_sols[num_sols*6+2] = q3[k];    q_sols[num_sols*6+3] = q4[k]; 
             q_sols[num_sols*6+4] = q5[i][j]; q_sols[num_sols*6+5] = q6; 
+
+            // int idx = i * 4 + j * 2 + k;
+            // solution_array[idx] = {q1[i], q2[k], q3[k], q4[k], q5[i][j], q6};
             num_sols++;
           }
 

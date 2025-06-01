@@ -684,6 +684,25 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
                        jnt_pos_test(ur_joint_inds_start_+5));
 
 
+    RCLCPP_INFO(getLogger(), "Analytic IK returned %d raw solutions:", num_sols);
+    for (int i = 0; i < 8; ++i) {
+      RCLCPP_INFO(getLogger(), "  Solution %d: [%1.5f, %1.5f, %1.5f, %1.5f, %1.5f, %1.5f]",
+                  i,
+                  q_ik_sols[i][0],
+                  q_ik_sols[i][1],
+                  q_ik_sols[i][2],
+                  q_ik_sols[i][3],
+                  q_ik_sols[i][4],
+                  q_ik_sols[i][5]);
+    }
+
+    int manual_index = 5;
+    for (int j = 0; j < 6; ++j) {
+      solution[j] = q_ik_sols[manual_index][j];
+    }
+    RCLCPP_INFO(getLogger(), "Returning manual raw solution index: %d", manual_index);
+    return true;
+
     uint16_t num_valid_sols;
     std::vector< std::vector<double> > q_ik_valid_sols;
     for(uint16_t i=0; i<num_sols; i++)
@@ -692,6 +711,7 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
       std::vector< double > valid_solution;
       valid_solution.assign(6,0.0);
 
+      // Closed-form IK often returns solutions in [0, 2π], while many robots define joint limits in [-π, π] or similar.
       for(uint16_t j=0; j<6; j++)
       {
         if((q_ik_sols[i][j] <= ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j] >= ik_chain_info_.limits[j].min_position))
@@ -753,6 +773,7 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
     }
     printf("end\n");
 #endif
+    // ---- FALLBACK: Iterate to find best valid solution ----
 
     for(uint16_t i=0; i<weighted_diffs.size(); i++) {
       if(weighted_diffs[i].second == std::numeric_limits<double>::infinity()) {

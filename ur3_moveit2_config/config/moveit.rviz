@@ -4,7 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /TF1
+        - /MotionPlanning1
         - /TF1/Frames1
       Splitter Ratio: 0.5
     Tree Height: 144
@@ -36,7 +36,7 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
-    - Acceleration_Scaling_Factor: 0.1
+    - Acceleration_Scaling_Factor: 0.5
       Class: moveit_rviz_plugin/MotionPlanning
       Enabled: true
       Move Group Namespace: ""
@@ -80,6 +80,10 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          ee_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           flange:
             Alpha: 1
             Show Axes: false
@@ -118,7 +122,7 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-        Loop Animation: true
+        Loop Animation: false
         Robot Alpha: 0.5
         Robot Color: 150; 50; 150
         Show Robot Collision: false
@@ -177,6 +181,10 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          ee_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           flange:
             Alpha: 1
             Show Axes: false
@@ -219,7 +227,7 @@ Visualization Manager:
         Show Robot Collision: false
         Show Robot Visual: true
       Value: true
-      Velocity_Scaling_Factor: 0.1
+      Velocity_Scaling_Factor: 0.5
     - Alpha: 0.5
       Class: rviz_default_plugins/RobotModel
       Collision Enabled: false
@@ -251,6 +259,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        ee_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         flange:
           Alpha: 1
           Show Axes: false
@@ -310,6 +322,8 @@ Visualization Manager:
           Value: false
         base_link_inertia:
           Value: false
+        ee_link:
+          Value: true
         flange:
           Value: false
         forearm_link:
@@ -345,6 +359,8 @@ Visualization Manager:
                     wrist_1_link:
                       wrist_2_link:
                         wrist_3_link:
+                          ee_link:
+                            {}
                           flange:
                             tool0:
                               {}
@@ -368,25 +384,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 1.5223678350448608
+      Distance: 1.9891941547393799
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.08000624924898148
-        Y: -0.02096150815486908
-        Z: 0.09638351947069168
+        X: -0.15011098980903625
+        Y: -0.1434924155473709
+        Z: 0.04490053281188011
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.19000014662742615
+      Pitch: 0.2600001394748688
       Target Frame: base_link
       Value: Orbit (rviz_default_plugins)
-      Yaw: 0.4970085918903351
+      Yaw: 5.5751800537109375
     Saved: ~
 Window Geometry:
   Displays:
