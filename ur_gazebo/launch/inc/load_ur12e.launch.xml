@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <launch>
   <!--Parameter files -->
-  <arg name="joint_limit_params" default="$(find ur_description)/config/ur12e/joint_limits.yaml"/>
-  <arg name="kinematics_params" default="$(find ur_description)/config/ur12e/default_kinematics.yaml"/>
-  <arg name="physical_params" default="$(find ur_description)/config/ur12e/physical_parameters.yaml"/>
-  <arg name="visual_params" default="$(find ur_description)/config/ur12e/visual_parameters.yaml"/>
+  <arg name="joint_limit_params" default="$(find ur_ros1_description)/config/ur12e/joint_limits.yaml"/>
+  <arg name="kinematics_params" default="$(find ur_ros1_description)/config/ur12e/default_kinematics.yaml"/>
+  <arg name="physical_params" default="$(find ur_ros1_description)/config/ur12e/physical_parameters.yaml"/>
+  <arg name="visual_params" default="$(find ur_ros1_description)/config/ur12e/visual_parameters.yaml"/>
 
   <!--Common parameters -->
   <arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface" doc="The hardware_interface to expose for each joint in the simulated robot (one of: [PositionJointInterface, VelocityJointInterface, EffortJointInterface])"/>

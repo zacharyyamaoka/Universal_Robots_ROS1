@@ -38,6 +38,8 @@
 #ifndef UR_KIN_H
 #define UR_KIN_H
 
+#include <array>
+
 // These kinematics find the tranfrom from the base link to the end effector.
 // Though the raw D-H parameters specify a transform from the 0th link to the 6th link,
 // offset transforms are specified in this formulation.
@@ -70,7 +72,7 @@ namespace ur_kinematics {
   // @param q6_des  An optional parameter which designates what the q6 value should take
   //                in case of an infinite solution on that joint.
   // @return        Number of solutions found (maximum of 8)
-  int inverse(const double* T, double* q_sols, double q6_des=0.0);
+  int inverse(const double* T, double* q_sols, std::array<bool, 8>& sol_success, double q6_des=0.0);
 };
 
 #endif //UR_KIN_H

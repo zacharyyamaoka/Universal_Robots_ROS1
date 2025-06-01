@@ -254,13 +254,10 @@ namespace ur_kinematics {
     }
   }
 
-  int inverse(const double* T, double* q_sols, double q6_des) {
+  int inverse(const double* T, double* q_sols, std::array<bool, 8>& sol_success, double q6_des) {
 
-    // std::array<std::array<double, 6>, 8> solution_array;
-    // for (auto& sol : solution_array) {
-    //   sol.fill(std::numeric_limits<double>::quiet_NaN());
-    // }
-  
+    sol_success.fill(false);  // reset all to false at start
+
     int num_sols = 0;
     double T02 = -*T; T++; double T00 =  *T; T++; double T01 =  *T; T++; double T03 = -*T; T++; 
     double T12 = -*T; T++; double T10 =  *T; T++; double T11 =  *T; T++; double T13 = -*T; T++; 
@@ -395,12 +392,17 @@ namespace ur_kinematics {
             if(fabs(q4[k]) < ZERO_THRESH)
               q4[k] = 0.0;
             else if(q4[k] < 0.0) q4[k] += 2.0*PI;
-            q_sols[num_sols*6+0] = q1[i];    q_sols[num_sols*6+1] = q2[k]; 
-            q_sols[num_sols*6+2] = q3[k];    q_sols[num_sols*6+3] = q4[k]; 
-            q_sols[num_sols*6+4] = q5[i][j]; q_sols[num_sols*6+5] = q6; 
 
-            // int idx = i * 4 + j * 2 + k;
-            // solution_array[idx] = {q1[i], q2[k], q3[k], q4[k], q5[i][j], q6};
+            int idx = i * 4 + j * 2 + k;
+
+            q_sols[idx*6+0] = q1[i];
+            q_sols[idx*6+1] = q2[k]; 
+            q_sols[idx*6+2] = q3[k];
+            q_sols[idx*6+3] = q4[k]; 
+            q_sols[idx*6+4] = q5[i][j];
+            q_sols[idx*6+5] = q6; 
+
+            sol_success[idx] = true;
             num_sols++;
           }
 
@@ -457,8 +459,8 @@ IKFAST_API bool ComputeIk(const IkReal* eetrans, const IkReal* eerot, const IkRe
   double T[16];
 
   to_mat44(T, eetrans, eerot);
-
-  int num_sols = ur_kinematics::inverse(T, q_sols,pfree[0]);
+  std::array<bool, 8> sol_success;
+  int num_sols = ur_kinematics::inverse(T, q_sols, sol_success, pfree[0]);
 
   std::vector<int> vfree(0);
 
@@ -504,7 +506,8 @@ int main(int argc, char* argv[])
   }
   double q_sols[8*6];
   int num_sols;
-  num_sols = inverse(T, q_sols);
+  std::array<bool, 8> sol_success;
+  num_sols = inverse(T, q_sols, sol_success);
   for(int i=0;i<num_sols;i++) 
     printf("%1.6f %1.6f %1.6f %1.6f %1.6f %1.6f\n", 
        q_sols[i*6+0], q_sols[i*6+1], q_sols[i*6+2], q_sols[i*6+3], q_sols[i*6+4], q_sols[i*6+5]);

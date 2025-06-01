@@ -1,5 +1,5 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package ur_description
+Changelog for package ur_ros1_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.4.0 (2025-03-31)
@@ -26,7 +26,7 @@ Changelog for package ur_description
 1.3.0 (2022-11-10)
 ------------------
 * Merge melodic-devel-staging `#617 <https://github.com/ros-industrial/universal_robot/issues/617>`_ from ros-industrial/melodic-devel-staging
-* ur_description: Make robot name configurable on load_ur.launch (`#612 <https://github.com/ros-industrial/universal_robot/issues/612>`_)
+* ur_ros1_description: Make robot name configurable on load_ur.launch (`#612 <https://github.com/ros-industrial/universal_robot/issues/612>`_)
   In 9d02ccadc8fb9b5cfeaf0d5b0c0c7708d2461447 robot launchfiles were forwarded
   to their specialized launchfiles instead of setting the robot model in the
   load_ur.launch file.
@@ -35,7 +35,7 @@ Changelog for package ur_description
 * Merge pull request `#602 <https://github.com/ros-industrial/universal_robot/issues/602>`_ from fmauch/fix_deprecation_warning
   fixing deprecation warning
 * fixing deprecation warning
-* ur_description: Use the per-model xacro files for correct robot name (`#588 <https://github.com/ros-industrial/universal_robot/issues/588>`_)
+* ur_ros1_description: Use the per-model xacro files for correct robot name (`#588 <https://github.com/ros-industrial/universal_robot/issues/588>`_)
   With the common xacro file the robot name will always be "ur".
   However, the moveit config packages expect the robot name to be e.g. "ur10e".
   This commit will use the macros containing the model name already.
@@ -105,12 +105,12 @@ Changelog for package ur_description
   As the way we model the robots may change in the future, users should consider these files as private.
   No guarantees are given as to the existence of these files or their contents.
 * Merge pull request `#497 <https://github.com/ros-industrial/universal_robot/issues/497>`_ from gavanderhoorn/desc_updates
-  Misc updates to ur_description
+  Misc updates to ur_ros1_description
 * description: clarify note on base_correction property.
 * description: typo.
 * description: explain function of common load_ur launch file.
 * description: recognise Mathias Lüdtke as contributor.
-* Update ur_description/urdf/ur_macro.xacro
+* Update ur_ros1_description/urdf/ur_macro.xacro
   Co-authored-by: Felix Exner <felix_mauch@web.de>
 * description: format top-level xacro.
 * description: build script cleanup.
@@ -145,12 +145,12 @@ Changelog for package ur_description
 * Use full kinematics parameters in description (`#495 <https://github.com/ros-industrial/universal_robot/issues/495>`_)
   the kinematics parameters can be retrieved from a calibration mechanism
   to precisely represent the robot's kinematics.
-* Merge pull request `#371 <https://github.com/ros-industrial/universal_robot/issues/371>`_ from ipa-led/ur_description_args
+* Merge pull request `#371 <https://github.com/ros-industrial/universal_robot/issues/371>`_ from ipa-led/ur_ros1_description_args
   Urdf with args and yaml configuration
 * used robot_state_publisher instead of state_publisher
 * removed --inorder for common launch
   * default in melodic
-* update ur_description launch files
+* update ur_ros1_description launch files
   * use of yaml files parameters
   * added e_series
   * create a common launch file to avoir duplicated
@@ -163,7 +163,7 @@ Changelog for package ur_description
 * create parameters yaml files
   * one for each models
 * deleted ur_e specific repositories
-  * moved ur_e_description meshes files to ur_description
+  * moved ur_e_description meshes files to ur_ros1_description
 * Merge pull request `#437 <https://github.com/ros-industrial/universal_robot/issues/437>`_ from ipa-nhg/safetylimits
   Add optional safety_controller tags to all joints in xacro macros
 * migrated all package.xml files to format=2 (`#439 <https://github.com/ros-industrial/universal_robot/issues/439>`_)

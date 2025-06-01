@@ -16,9 +16,9 @@
     launch files.
 
     NOTE: this Gazebo model makes use of the same set of parameter files as the
-    main xacro macro (in ur_description). It is therefor possible to use the
+    main xacro macro (in ur_ros1_description). It is therefor possible to use the
     kinematic calibration exported from a REAL UR robot. Please refer to the
-    ur_macro.xacro in ur_description for more information about this.
+    ur_macro.xacro in ur_ros1_description for more information about this.
 
     Main author of the migration to yaml configs: Ludovic Delval.
 
@@ -53,10 +53,10 @@
       Import the xacro macro for the REAL robot (which we'll augment with Gazebo
       specific elements in the wrapper macro below).
 
-      NOTE: this imports the '_macro.xacro' from ur_description, as that contains
+      NOTE: this imports the '_macro.xacro' from ur_ros1_description, as that contains
       the definitions for the real robot.
     -->
-  <xacro:include filename="$(find ur_description)/urdf/inc/ur_macro.xacro"/>
+  <xacro:include filename="$(find ur_ros1_description)/urdf/inc/ur_macro.xacro"/>
 
 
     <!-- Instantiate model for the REAL robot. -->

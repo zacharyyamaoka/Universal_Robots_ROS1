@@ -36,7 +36,7 @@ Changelog for package ur_gazebo
   For the driver this corresponds to the tool transformation published by
   the robot controller directly. As this doesn't exist for the simulated
   robot, this adds the frame using an identity transform from tool0.
-* Make ur_gazebo robot name consistent with ur_description (`#615 <https://github.com/ros-industrial/universal_robot/issues/615>`_)
+* Make ur_gazebo robot name consistent with ur_ros1_description (`#615 <https://github.com/ros-industrial/universal_robot/issues/615>`_)
 * Increase minimum CMake version to allow builds on Focal Fossa (Noetic) (`#586 <https://github.com/ros-industrial/universal_robot/issues/586>`_)
 * Merge pull request `#562 <https://github.com/ros-industrial/universal_robot/issues/562>`_ from fmauch/convenience_macros
   Add convenience macros for description files
@@ -116,7 +116,7 @@ Changelog for package ur_gazebo
 * gazebo: use 'bringup' launch file name.
   These files will serve the same purpose as those provided by a/the driver (but instead of a driver, they will launch Gazebo). Give them the same name to make them recognisable.
 * gazebo: introduce 'load\_*.launch' helpers.
-  These mimic the files with the same names as in ur_description, but load the Gazebo model instead of the real robot onto the parameter server.
+  These mimic the files with the same names as in ur_ros1_description, but load the Gazebo model instead of the real robot onto the parameter server.
 * gazebo: controller_utils isn't re-used anywhere else.
   So merge contents into 'ur_common.launch' and remove the file.
 * gazebo: nothing to calibrate.
@@ -135,15 +135,15 @@ Changelog for package ur_gazebo
 * Merge pull request `#520 <https://github.com/ros-industrial/universal_robot/issues/520>`_ from gavanderhoorn/fix_yaml_loading
   Load yaml files in read_model_data(..), nowhere else
 * gazebo: pass parameter filenames, not their content.
-  Aligns with similar changes in ur_description.
+  Aligns with similar changes in ur_ros1_description.
 * Merge pull request `#516 <https://github.com/ros-industrial/universal_robot/issues/516>`_ from gavanderhoorn/convert_limits_files
   Use 'ros_control style' joint limit files
 * gazebo: use new arg names for joint limits.
-  Renamed in ur_description, so use the new names here as well and pass the right values.
+  Renamed in ur_ros1_description, so use the new names here as well and pass the right values.
 * gazebo: update joint limit filename references.
   They were renamed (in c0f71ebb), so use the new names.
 * Merge pull request `#497 <https://github.com/ros-industrial/universal_robot/issues/497>`_ from gavanderhoorn/desc_updates
-  Misc updates to ur_description
+  Misc updates to ur_ros1_description
 * gazebo: use new xacro macro file.
 * Merge pull request `#477 <https://github.com/ros-industrial/universal_robot/issues/477>`_ from fmauch/ur16e
   Add Ur16e support
@@ -154,7 +154,7 @@ Changelog for package ur_gazebo
 * Use full kinematics parameters in description (`#495 <https://github.com/ros-industrial/universal_robot/issues/495>`_)
   the kinematics parameters can be retrieved from a calibration mechanism
   to precisely represent the robot's kinematics.
-* Merge pull request `#371 <https://github.com/ros-industrial/universal_robot/issues/371>`_ from ipa-led/ur_description_args
+* Merge pull request `#371 <https://github.com/ros-industrial/universal_robot/issues/371>`_ from ipa-led/ur_ros1_description_args
   Urdf with args and yaml configuration
 * change gazebo launch file and tests
   * added e-series

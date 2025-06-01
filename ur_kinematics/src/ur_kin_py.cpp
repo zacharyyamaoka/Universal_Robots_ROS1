@@ -80,7 +80,8 @@ np::ndarray inverse_wrapper(np::ndarray const & array, PyObject * q6_des_py) {
   double* T = reinterpret_cast<double*>(array.get_data());
   double* q_sols = (double*) malloc(8*6*sizeof(double));
   double q6_des = PyFloat_AsDouble(q6_des_py);
-  int num_sols = ur_kinematics::inverse(T, q_sols, q6_des);
+  std::array<bool, 8> sol_success;
+  int num_sols = ur_kinematics::inverse(T, q_sols, sol_success, q6_des);
   q_sols = (double*) realloc(q_sols, num_sols*6*sizeof(double));
   return np::from_data(q_sols, np::dtype::get_builtin<double>() , p::make_tuple(num_sols, 6), p::make_tuple(6*sizeof(double), sizeof(double)), p::object());
 }

@@ -3,7 +3,7 @@
     <xacro:arg name="initial_positions_file" default="initial_positions.yaml" />
 
     <!-- Import ur3_robot urdf file -->
-    <xacro:include filename="$(find ur_description)/urdf/ur3.xacro" />
+    <xacro:include filename="$(find ur_ros1_description)/urdf/ur3.xacro" />
 
     <!-- Import control_xacro -->
     <xacro:include filename="ur3_robot.ros2_control.xacro" />

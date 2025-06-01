@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>ur_description</name>
+  <name>ur_ros1_description</name>
   <version>1.4.0</version>
   <description>
       URDF description for Universal UR3(e), UR5(e), UR10(e), UR16e, UR20 and UR30 robots
@@ -22,7 +22,7 @@
   <license file="meshes/ur30/LICENSE.txt">Universal Robots A/S' Terms and Conditions for Use of Graphical Documentation</license>
   <!--<license file="meshes/ur20/LICENSE.txt" source-files="meshes/ur20/*" type="freeform">Universal Robots A/S' Terms and Conditions for Use of Graphical Documentation</license>-->
 
-  <url type="website">http://wiki.ros.org/ur_description</url>
+  <url type="website">http://wiki.ros.org/ur_ros1_description</url>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

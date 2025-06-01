@@ -34,10 +34,10 @@ Changelog for package universal_robots
 * Merge pull request `#498 <https://github.com/ros-industrial/universal_robot/issues/498>`_ from gavanderhoorn/remove_ur_driver
   Remove obsolete driver and bringup pkgs
 * meta: remove driver and bringup.
-* Merge pull request `#371 <https://github.com/ros-industrial/universal_robot/issues/371>`_ from ipa-led/ur_description_args
+* Merge pull request `#371 <https://github.com/ros-industrial/universal_robot/issues/371>`_ from ipa-led/ur_ros1_description_args
   Urdf with args and yaml configuration
 * deleted ur_e specific repositories
-  * moved ur_e_description meshes files to ur_description
+  * moved ur_e_description meshes files to ur_ros1_description
 * Contributors: Felix Exner, Felix Exner (fexner), G.A. vd. Hoorn, Ludovic Delval, Nadia Hammoudeh García, gavanderhoorn
 
 1.2.5 (2019-04-05)

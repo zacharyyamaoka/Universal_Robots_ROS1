@@ -637,6 +637,7 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
   double homo_ik_pose[4][4];
   double q_ik_sols[8][6]; // maximum of 8 IK solutions
   uint16_t num_sols;
+  std::array<bool, 8> sol_success;
 
   while(1) {
     if(timedOut(start_time, timeout)) {
@@ -680,21 +681,28 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
     /////////////////////////////////////////////////////////////////////////////
 
     // Do the analytic IK
-    num_sols = inverse((double*) homo_ik_pose, (double*) q_ik_sols,
-                       jnt_pos_test(ur_joint_inds_start_+5));
-
-
+    std::array<bool, 8> sol_success;
+    num_sols = inverse((double*) homo_ik_pose, (double*) q_ik_sols, sol_success, jnt_pos_test(ur_joint_inds_start_+5));
     RCLCPP_INFO(getLogger(), "Analytic IK returned %d raw solutions:", num_sols);
     for (int i = 0; i < 8; ++i) {
-      RCLCPP_INFO(getLogger(), "  Solution %d: [%1.5f, %1.5f, %1.5f, %1.5f, %1.5f, %1.5f]",
-                  i,
-                  q_ik_sols[i][0],
-                  q_ik_sols[i][1],
-                  q_ik_sols[i][2],
-                  q_ik_sols[i][3],
-                  q_ik_sols[i][4],
-                  q_ik_sols[i][5]);
+      if (sol_success[i]) {
+        RCLCPP_INFO(getLogger(), "  Solution %d: [%1.5f, %1.5f, %1.5f, %1.5f, %1.5f, %1.5f]",
+                    i,
+                    q_ik_sols[i][0],
+                    q_ik_sols[i][1],
+                    q_ik_sols[i][2],
+                    q_ik_sols[i][3],
+                    q_ik_sols[i][4],
+                    q_ik_sols[i][5]);
+      } else {
+        RCLCPP_INFO(getLogger(), "  Solution %d: None ", i);
+      }
     }
+
+    // TODO Make it dynamic
+    #ifdef RIGHT_PRIORITY
+    const double priority = [5, 0, 1, 2, 3, 4, 6, 7]
+    #endif
 
     int manual_index = 5;
     for (int j = 0; j < 6; ++j) {

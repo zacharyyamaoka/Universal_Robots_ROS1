@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(ur_description)
+project(ur_ros1_description)
 
 # Find ament packages
 find_package(ament_cmake REQUIRED)

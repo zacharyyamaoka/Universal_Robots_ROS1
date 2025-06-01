@@ -3,11 +3,11 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 
-# ros2 launch ur_description display.launch.py 
+# ros2 launch ur_ros1_description display.launch.py 
 def generate_launch_description():
     ld = LaunchDescription()
 
-    description_package = FindPackageShare('ur_description')
+    description_package = FindPackageShare('ur_ros1_description')
     default_model_path = PathJoinSubstitution(['urdf', 'ur3.xacro'])
     default_rviz_config_path = PathJoinSubstitution([description_package, 'cfg', 'urdf.rviz'])
 
@@ -25,7 +25,7 @@ def generate_launch_description():
                                         description='Path to robot urdf file relative to urdf_tutorial package')
     ld.add_action(model_arg)
 
-    package_arg = DeclareLaunchArgument(name='package', default_value='ur_description',
+    package_arg = DeclareLaunchArgument(name='package', default_value='ur_ros1_description',
                                         description='Path to package with urdf_file')
     ld.add_action(package_arg)
 

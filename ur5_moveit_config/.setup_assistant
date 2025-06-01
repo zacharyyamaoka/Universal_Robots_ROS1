@@ -1,6 +1,6 @@
 moveit_setup_assistant_config:
   URDF:
-    package: ur_description
+    package: ur_ros1_description
     relative_path: urdf/ur5.xacro
     xacro_args: ""
   SRDF:
