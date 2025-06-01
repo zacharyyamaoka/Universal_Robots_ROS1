@@ -684,24 +684,37 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
     std::array<bool, 8> sol_success;
     // TODO mabye edit the desired 6th joint to make sure its correct
     num_sols = inverse((double*) homo_ik_pose, (double*) q_ik_sols, sol_success, jnt_pos_test(ur_joint_inds_start_+5));
-    std::ostringstream oss;
-    oss << "\nAnalytic IK returned " << num_sols << " raw solutions:\n";
-    for (int i = 0; i < 8; ++i) {
-      if (sol_success[i]) {
-        oss << "  Solution " << i << ": ["
-            << std::fixed << std::setprecision(5)
-            << q_ik_sols[i][0] << ", "
-            << q_ik_sols[i][1] << ", "
-            << q_ik_sols[i][2] << ", "
-            << q_ik_sols[i][3] << ", "
-            << q_ik_sols[i][4] << ", "
-            << q_ik_sols[i][5] << "]\n";
-      } else {
-        oss << "  Solution " << i << ": None\n";
-      }
-    }
-    RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
 
+    std::ostringstream oss;
+
+    // oss << "\nAnalytic IK returned " << num_sols << " raw solutions:\n";
+    // for (int i = 0; i < 8; ++i) {
+    //   if (sol_success[i]) {
+    //     oss << "  Solution " << i << ": ["
+    //         << std::fixed << std::setprecision(5)
+    //         << q_ik_sols[i][0] << ", "
+    //         << q_ik_sols[i][1] << ", "
+    //         << q_ik_sols[i][2] << ", "
+    //         << q_ik_sols[i][3] << ", "
+    //         << q_ik_sols[i][4] << ", "
+    //         << q_ik_sols[i][5] << "]\n";
+    //   } else {
+    //     oss << "  Solution " << i << ": None\n";
+    //   }
+    // }
+    // RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
+
+
+    // oss.str("");
+    // oss.clear();
+    // oss << "Joint limits:\n";
+    // for (size_t j = 0; j < 6; ++j)
+    // {
+    //   oss << "  Joint " << j
+    //       << ": min=" << std::fixed << std::setprecision(5) << ik_chain_info_.limits[j].min_position
+    //       << ", max=" << ik_chain_info_.limits[j].max_position << "\n";
+    // }
+    // RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
 
     // Loop through all 8 solutions
     // Loop through each joint
@@ -748,7 +761,6 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
 
     }
 
-
     oss.str("");
     oss.clear();
     oss << "\nAfter wrapping " << num_sols << " solutions:\n";
@@ -773,11 +785,31 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
     const double priority = [5, 0, 1, 2, 3, 4, 6, 7]
     #endif
 
-    int manual_index = 5;
+    // Select solution
+    int manual_index = 2;
+    RCLCPP_INFO(getLogger(), "Returning manual raw solution index: %d", manual_index);
+
+    // Even if invalid, it may be in there but not meet the joint limits for example...
+    std::ostringstream sol_oss;
+    sol_oss << "Selected solution: ["
+            << std::fixed << std::setprecision(5)
+            << q_ik_sols[manual_index][0] << ", "
+            << q_ik_sols[manual_index][1] << ", "
+            << q_ik_sols[manual_index][2] << ", "
+            << q_ik_sols[manual_index][3] << ", "
+            << q_ik_sols[manual_index][4] << ", "
+            << q_ik_sols[manual_index][5] << "]";
+    RCLCPP_INFO(getLogger(), "%s", sol_oss.str().c_str());
+ 
+    if (!sol_success[manual_index])
+      RCLCPP_WARN(getLogger(), "Warning: Selected solution index %d is marked as invalid!", manual_index);
+
+    // Fill output
     for (int j = 0; j < 6; ++j) {
       solution[j] = q_ik_sols[manual_index][j];
     }
-    RCLCPP_INFO(getLogger(), "Returning manual raw solution index: %d", manual_index);
+    error_code.val = error_code.SUCCESS;
+
     return true;
 
     // use weighted absolute deviations to determine the solution closest the seed state
