@@ -32,6 +32,8 @@ generate_parameter_library(
 )
 
 
+add_library(dummy_dh_kin src/ur_kin.cpp)
+set_target_properties(dummy_dh_kin PROPERTIES COMPILE_DEFINITIONS "DUMMY_DH_PARAMS")
 
 add_library(bam_arm_kin src/ur_kin.cpp)
 set_target_properties(bam_arm_kin PROPERTIES COMPILE_DEFINITIONS "BAM_ARM_PARAMS")
@@ -62,6 +64,12 @@ set_target_properties(ur20_kin PROPERTIES COMPILE_DEFINITIONS "UR20_PARAMS")
 
 add_library(ur30_kin src/ur_kin.cpp)
 set_target_properties(ur30_kin PROPERTIES COMPILE_DEFINITIONS "UR30_PARAMS")
+
+add_library(dummy_dh_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
+set_target_properties(dummy_dh_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "DUMMY_DH_PARAMS;DUMMY_ROBOT")
+target_link_libraries(dummy_dh_moveit_plugin dummy_dh_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
+ament_target_dependencies(dummy_dh_moveit_plugin
+  rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
 
 add_library(bam_arm_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(bam_arm_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "BAM_ARM_PARAMS;BAM_ROBOT")
@@ -130,6 +138,7 @@ ament_target_dependencies(ur30_moveit_plugin
 #############
 
 install(TARGETS
+  dummy_dh_kin dummy_dh_moveit_plugin
   bam_arm_kin bam_arm_moveit_plugin
   ur3_kin ur3e_kin ur5_kin ur5e_kin ur10_kin ur10e_kin ur16e_kin ur20_kin ur30_kin
   ur3_moveit_plugin ur3e_moveit_plugin ur5_moveit_plugin ur5e_moveit_plugin

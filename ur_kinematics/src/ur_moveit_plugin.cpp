@@ -352,9 +352,6 @@ bool URKinematicsPlugin::initialize(const rclcpp::Node::SharedPtr& node,
   #endif
 
   #ifdef BAM_ROBOT
-  // The ur_joint_names_ and ur_link_names_ don't actually hold any kinematic information
-  // That is all in the robot_model_ which is used to make a KDL chain
-  // They are just for verifying that the model has certain joint names and links
   ur_joint_names_.push_back(arm_prefix_ + "joint_1");
   ur_joint_names_.push_back(arm_prefix_ + "joint_2");
   ur_joint_names_.push_back(arm_prefix_ + "joint_3");
@@ -362,15 +359,22 @@ bool URKinematicsPlugin::initialize(const rclcpp::Node::SharedPtr& node,
   ur_joint_names_.push_back(arm_prefix_ + "joint_5");
   ur_joint_names_.push_back(arm_prefix_ + "joint_6");
 
-  ur_link_names_.push_back(arm_prefix_ + "base_link_1");       // 0
-  // ur_link_names_.push_back(arm_prefix_ + "ur_base_link");    // 1
-  // ur_link_names_.push_back(arm_prefix_ + "shoulder_link");   // 2
-  // ur_link_names_.push_back(arm_prefix_ + "upper_arm_link");  // 3
-  // ur_link_names_.push_back(arm_prefix_ + "forearm_link");    // 4
-  // ur_link_names_.push_back(arm_prefix_ + "wrist_1_link");    // 5
-  // ur_link_names_.push_back(arm_prefix_ + "wrist_2_link");    // 6
-  ur_link_names_.push_back(arm_prefix_ + "wrist_3_link_6");    // 7
-  ur_link_names_.push_back(arm_prefix_ + "ee_link");         // 8
+  ur_link_names_.push_back(arm_prefix_ + "base_link_1");      
+  ur_link_names_.push_back(arm_prefix_ + "wrist_3_link_6");    
+  ur_link_names_.push_back(arm_prefix_ + "ee_link");       
+  #endif
+
+  #ifdef DUMMY_ROBOT
+  ur_joint_names_.push_back(arm_prefix_ + "joint_1");
+  ur_joint_names_.push_back(arm_prefix_ + "joint_2");
+  ur_joint_names_.push_back(arm_prefix_ + "joint_3");
+  ur_joint_names_.push_back(arm_prefix_ + "joint_4");
+  ur_joint_names_.push_back(arm_prefix_ + "joint_5");
+  ur_joint_names_.push_back(arm_prefix_ + "joint_6");
+
+  ur_link_names_.push_back(arm_prefix_ + "base_link");      
+  ur_link_names_.push_back(arm_prefix_ + "link_5");    
+  ur_link_names_.push_back(arm_prefix_ + "ee_link");       
   #endif
 
   ur_joint_inds_start_ = getJointIndex(ur_joint_names_[0]);
@@ -434,6 +438,7 @@ bool URKinematicsPlugin::initialize(const rclcpp::Node::SharedPtr& node,
   RCLCPP_INFO(getLogger(), "  Moveit Tip Frame   : %s", getTipFrame().c_str());
   RCLCPP_INFO(getLogger(), "  IK Base Link       : %s", ur_link_names_.front().c_str());
   RCLCPP_INFO(getLogger(), "  IK Tip Link        : %s", ur_link_names_.back().c_str());
+  RCLCPP_INFO(getLogger(), "  Moveit and IK names should be the same");
 
   return true;
 }
@@ -704,6 +709,9 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
 #endif
     /////////////////////////////////////////////////////////////////////////////
 
+    // I chcked on June 2 2025 that q_6 desired was correct
+    RCLCPP_INFO(getLogger(), "q_6 desired: %f", jnt_pos_test(ur_joint_inds_start_ + 5));
+
     // Do the analytic IK
     std::array<bool, 8> sol_success;
     // TODO mabye edit the desired 6th joint to make sure its correct
@@ -711,22 +719,23 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
 
     std::ostringstream oss;
 
-    // oss << "\nAnalytic IK returned " << num_sols << " raw solutions:\n";
-    // for (int i = 0; i < 8; ++i) {
-    //   if (sol_success[i]) {
-    //     oss << "  Solution " << i << ": ["
-    //         << std::fixed << std::setprecision(5)
-    //         << q_ik_sols[i][0] << ", "
-    //         << q_ik_sols[i][1] << ", "
-    //         << q_ik_sols[i][2] << ", "
-    //         << q_ik_sols[i][3] << ", "
-    //         << q_ik_sols[i][4] << ", "
-    //         << q_ik_sols[i][5] << "]\n";
-    //   } else {
-    //     oss << "  Solution " << i << ": None\n";
-    //   }
-    // }
-    // RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
+    // Uncomment this to see the raw solutions
+    oss << "\nAnalytic IK returned " << num_sols << " raw solutions:\n";
+    for (int i = 0; i < 8; ++i) {
+      if (sol_success[i]) {
+        oss << "  Solution " << i << ": ["
+            << std::fixed << std::setprecision(5)
+            << q_ik_sols[i][0] << ", "
+            << q_ik_sols[i][1] << ", "
+            << q_ik_sols[i][2] << ", "
+            << q_ik_sols[i][3] << ", "
+            << q_ik_sols[i][4] << ", "
+            << q_ik_sols[i][5] << "]\n";
+      } else {
+        oss << "  Solution " << i << ": None\n";
+      }
+    }
+    RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
 
 
     // oss.str("");
@@ -751,6 +760,11 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
       std::vector< double > valid_solution;
       valid_solution.assign(6,0.0);
 
+
+      if (sol_success[i] = false) 
+        // No need to check bad solution
+        continue;
+
       // Closed-form IK often returns solutions in [0, 2π], while many robots define joint limits in [-π, π] or similar.
       for(uint16_t j=0; j<6; j++)
       {
@@ -771,12 +785,41 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
         }
         else
         {
+        RCLCPP_WARN(getLogger(), "Rejected joint %d: %.4f not in [%.4f, %.4f]",
+                    j, q_ik_sols[i][j],
+                    ik_chain_info_.limits[j].min_position,
+                    ik_chain_info_.limits[j].max_position);
+
           sol_success[i] = false;
           num_sols -= 1;
           break;
         }
       }
       
+      // TODO this is rejecting things that are right on the edge...
+      // [move_group-1] Analytic IK returned 8 raw solutions:
+      // [move_group-1]   Solution 0: [0.00000, 4.93891, 0.82615, 1.49012, 1.47530, 3.14159]
+      // [move_group-1]   Solution 1: [0.00000, 5.76506, 5.45703, 2.31627, 1.47530, 3.14159]
+      // [move_group-1]   Solution 2: [0.00000, 4.32188, 1.75300, 4.32188, 4.80788, 0.00000]
+      // [move_group-1]   Solution 3: [0.00000, 6.07489, 4.53018, 6.07489, 4.80788, 0.00000]
+      // [move_group-1]   Solution 4: [4.02535, 3.38522, 1.72870, 3.22151, 1.18822, 0.75925]
+      // [move_group-1]   Solution 5: [4.02535, 5.11393, 4.55448, 4.95021, 1.18822, 0.75925]
+      // [move_group-1]   Solution 6: [4.02535, 3.62578, 0.85825, 0.70981, 5.09497, 3.90084]
+      // [move_group-1]   Solution 7: [4.02535, 4.48403, 5.42493, 1.56806, 5.09497, 3.90084]
+      // [move_group-1] 
+      // [move_group-1] [WARN] [1748978907.472595380] [bam_GPU.moveit.moveit.kinematics.ur_kinematics_plugin]: Rejected joint 5: 3.1416 not in [-3.1416, 3.1416]
+      // [move_group-1] [WARN] [1748978907.472601372] [bam_GPU.moveit.moveit.kinematics.ur_kinematics_plugin]: Rejected joint 5: 3.1416 not in [-3.1416, 3.1416]
+      // [move_group-1] After wrapping 6 solutions:
+      // [move_group-1]   Solution 0: None
+      // [move_group-1]   Solution 1: None
+      // [move_group-1]   Solution 2: [0.00000, -1.96130, 1.75300, -1.96130, -1.47530, 0.00000]
+      // [move_group-1]   Solution 3: [0.00000, -0.20830, -1.75300, -0.20830, -1.47530, 0.00000]
+      // [move_group-1]   Solution 4: [-2.25784, -2.89796, 1.72870, -3.06168, 1.18822, 0.75925]
+      // [move_group-1]   Solution 5: [-2.25784, -1.16926, -1.72870, -1.33298, 1.18822, 0.75925]
+      // [move_group-1]   Solution 6: [-2.25784, -2.65740, 0.85825, 0.70981, -1.18822, -2.38235]
+      // [move_group-1]   Solution 7: [-2.25784, -1.79915, -0.85825, 1.56806, -1.18822, -2.38235]
+
+
       if (sol_success[i]) {
         // convert double list to vector, std::vector<double>(pointer_to_begin, pointer_to_end);
         q_ik_valid_sols.emplace_back(q_ik_sols[i], q_ik_sols[i] + 6);
@@ -804,16 +847,28 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
     }
     RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
 
+
     // TODO Make it dynamic
-    #ifdef RIGHT_PRIORITY
-    const double priority = [5, 0, 1, 2, 3, 4, 6, 7]
+    // Select solution
+    int manual_index; 
+
+    #ifdef UR_ROBOT
+    manual_index = 2;
     #endif
 
-    // Select solution
-    int manual_index = 2;
+    #ifdef BAM_ROBOT
+    manual_index = 3;
+    #endif
+
+    #ifdef DUMMY_ROBOT
+    manual_index = 2;
+    #endif
+
+
     RCLCPP_INFO(getLogger(), "Returning manual raw solution index: %d", manual_index);
 
     // Even if invalid, it may be in there but not meet the joint limits for example...
+    // Its helpful to still return the solution so the moveit can visualize the contacts, etc.
     std::ostringstream sol_oss;
     sol_oss << "Selected solution: ["
             << std::fixed << std::setprecision(5)
@@ -825,14 +880,17 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
             << q_ik_sols[manual_index][5] << "]";
     RCLCPP_INFO(getLogger(), "%s", sol_oss.str().c_str());
  
-    if (!sol_success[manual_index])
+    if (!sol_success[manual_index]){
       RCLCPP_WARN(getLogger(), "Warning: Selected solution index %d is marked as invalid!", manual_index);
+      error_code.val = error_code.NO_IK_SOLUTION;
+    }
+    else
+      error_code.val = error_code.SUCCESS;
 
     // Fill output
     for (int j = 0; j < 6; ++j) {
       solution[j] = q_ik_sols[manual_index][j];
     }
-    error_code.val = error_code.SUCCESS;
 
     return true;
 
