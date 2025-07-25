@@ -710,7 +710,7 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
     /////////////////////////////////////////////////////////////////////////////
 
     // I chcked on June 2 2025 that q_6 desired was correct
-    RCLCPP_INFO(getLogger(), "q_6 desired: %f", jnt_pos_test(ur_joint_inds_start_ + 5));
+    // RCLCPP_INFO(getLogger(), "q_6 desired: %f", jnt_pos_test(ur_joint_inds_start_ + 5));
 
     // Do the analytic IK
     std::array<bool, 8> sol_success;
@@ -719,23 +719,23 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
 
     std::ostringstream oss;
 
-    // Uncomment this to see the raw solutions
-    oss << "\nAnalytic IK returned " << num_sols << " raw solutions:\n";
-    for (int i = 0; i < 8; ++i) {
-      if (sol_success[i]) {
-        oss << "  Solution " << i << ": ["
-            << std::fixed << std::setprecision(5)
-            << q_ik_sols[i][0] << ", "
-            << q_ik_sols[i][1] << ", "
-            << q_ik_sols[i][2] << ", "
-            << q_ik_sols[i][3] << ", "
-            << q_ik_sols[i][4] << ", "
-            << q_ik_sols[i][5] << "]\n";
-      } else {
-        oss << "  Solution " << i << ": None\n";
-      }
-    }
-    RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
+    // // Uncomment this to see the raw solutions
+    // oss << "\nAnalytic IK returned " << num_sols << " raw solutions:\n";
+    // for (int i = 0; i < 8; ++i) {
+    //   if (sol_success[i]) {
+    //     oss << "  Solution " << i << ": ["
+    //         << std::fixed << std::setprecision(5)
+    //         << q_ik_sols[i][0] << ", "
+    //         << q_ik_sols[i][1] << ", "
+    //         << q_ik_sols[i][2] << ", "
+    //         << q_ik_sols[i][3] << ", "
+    //         << q_ik_sols[i][4] << ", "
+    //         << q_ik_sols[i][5] << "]\n";
+    //   } else {
+    //     oss << "  Solution " << i << ": None\n";
+    //   }
+    // }
+    // RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
 
 
     // oss.str("");
@@ -761,7 +761,7 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
       valid_solution.assign(6,0.0);
 
 
-      if (sol_success[i] = false) 
+      if (sol_success[i] == false) 
         // No need to check bad solution
         continue;
 
@@ -785,10 +785,10 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
         }
         else
         {
-        RCLCPP_WARN(getLogger(), "Rejected joint %d: %.4f not in [%.4f, %.4f]",
-                    j, q_ik_sols[i][j],
-                    ik_chain_info_.limits[j].min_position,
-                    ik_chain_info_.limits[j].max_position);
+          // RCLCPP_WARN(getLogger(), "Rejected joint %d: %.4f not in [%.4f, %.4f]",
+          //             j, q_ik_sols[i][j],
+          //             ik_chain_info_.limits[j].min_position,
+          //             ik_chain_info_.limits[j].max_position);
 
           sol_success[i] = false;
           num_sols -= 1;
@@ -819,7 +819,8 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
       // [move_group-1]   Solution 6: [-2.25784, -2.65740, 0.85825, 0.70981, -1.18822, -2.38235]
       // [move_group-1]   Solution 7: [-2.25784, -1.79915, -0.85825, 1.56806, -1.18822, -2.38235]
 
-
+      // If solution is still succesful after wrapping then push it into the q_ik_valid_sols
+      // whichs holds <= 8 wrapped solutions
       if (sol_success[i]) {
         // convert double list to vector, std::vector<double>(pointer_to_begin, pointer_to_end);
         q_ik_valid_sols.emplace_back(q_ik_sols[i], q_ik_sols[i] + 6);
@@ -828,24 +829,24 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
 
     }
 
-    oss.str("");
-    oss.clear();
-    oss << "\nAfter wrapping " << num_sols << " solutions:\n";
-    for (int i = 0; i < 8; ++i) {
-      if (sol_success[i]) {
-        oss << "  Solution " << i << ": ["
-            << std::fixed << std::setprecision(5)
-            << q_ik_sols[i][0] << ", "
-            << q_ik_sols[i][1] << ", "
-            << q_ik_sols[i][2] << ", "
-            << q_ik_sols[i][3] << ", "
-            << q_ik_sols[i][4] << ", "
-            << q_ik_sols[i][5] << "]\n";
-      } else {
-        oss << "  Solution " << i << ": None\n";
-      }
-    }
-    RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
+    // oss.str("");
+    // oss.clear();
+    // oss << "\nAfter wrapping " << num_sols << " solutions:\n";
+    // for (int i = 0; i < 8; ++i) {
+    //   if (sol_success[i]) {
+    //     oss << "  Solution " << i << ": ["
+    //         << std::fixed << std::setprecision(5)
+    //         << q_ik_sols[i][0] << ", "
+    //         << q_ik_sols[i][1] << ", "
+    //         << q_ik_sols[i][2] << ", "
+    //         << q_ik_sols[i][3] << ", "
+    //         << q_ik_sols[i][4] << ", "
+    //         << q_ik_sols[i][5] << "]\n";
+    //   } else {
+    //     oss << "  Solution " << i << ": None\n";
+    //   }
+    // }
+    // RCLCPP_INFO(getLogger(), "%s", oss.str().c_str());
 
 
     // TODO Make it dynamic
@@ -865,24 +866,30 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
     #endif
 
 
-    RCLCPP_INFO(getLogger(), "Returning manual raw solution index: %d", manual_index);
+    // RCLCPP_INFO(getLogger(), "Returning manual raw solution index: %d", manual_index);
 
-    // Even if invalid, it may be in there but not meet the joint limits for example...
-    // Its helpful to still return the solution so the moveit can visualize the contacts, etc.
-    std::ostringstream sol_oss;
-    sol_oss << "Selected solution: ["
-            << std::fixed << std::setprecision(5)
-            << q_ik_sols[manual_index][0] << ", "
-            << q_ik_sols[manual_index][1] << ", "
-            << q_ik_sols[manual_index][2] << ", "
-            << q_ik_sols[manual_index][3] << ", "
-            << q_ik_sols[manual_index][4] << ", "
-            << q_ik_sols[manual_index][5] << "]";
-    RCLCPP_INFO(getLogger(), "%s", sol_oss.str().c_str());
+    // // Even if invalid, it may be in there but not meet the joint limits for example...
+    // // Its helpful to still return the solution so the moveit can visualize the contacts, etc.
+    // std::ostringstream sol_oss;
+    // sol_oss << "Selected solution: ["
+    //         << std::fixed << std::setprecision(5)
+    //         << q_ik_sols[manual_index][0] << ", "
+    //         << q_ik_sols[manual_index][1] << ", "
+    //         << q_ik_sols[manual_index][2] << ", "
+    //         << q_ik_sols[manual_index][3] << ", "
+    //         << q_ik_sols[manual_index][4] << ", "
+    //         << q_ik_sols[manual_index][5] << "]";
+    // RCLCPP_INFO(getLogger(), "%s", sol_oss.str().c_str());
  
     if (!sol_success[manual_index]){
       RCLCPP_WARN(getLogger(), "Warning: Selected solution index %d is marked as invalid!", manual_index);
       error_code.val = error_code.NO_IK_SOLUTION;
+      // If you always return true this can lead to strange behaviour!
+      // 1. If its a joint limit error, then it's nice to still get a solution in rviz, 
+      // 2. if its a true IKfailure, then it leads to a strange lookup from a previous solution
+      // Certaintly during deployment I think its better to get a false return if it fails...
+      // At least I know what is causing the issue... another fix will be to just send valid IK positions...
+      // return false;
     }
     else
       error_code.val = error_code.SUCCESS;
@@ -892,7 +899,33 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose &ik_pos
       solution[j] = q_ik_sols[manual_index][j];
     }
 
+    // If not full defined, then return in failure or success
+    #ifndef FULL
     return true;
+    #endif
+
+    // If full defined, then return only in sucess case
+    if (sol_success[manual_index])
+      return true;
+
+      RCLCPP_INFO(getLogger(), "FULL defined, so returning next valid solution");
+
+    // TODO make the code below work, for now if q_ik_valid_sols has at least one solution return it, otherwise return false
+
+    // Try any of the wrapped valid solutions
+    for (const auto& valid_sol : q_ik_valid_sols) {
+      for (int j = 0; j < 6; ++j) {
+        solution[j] = valid_sol[j];
+      }
+      error_code.val = error_code.SUCCESS;
+      return true;
+    }
+
+    // Nothing valid found
+    error_code.val = error_code.NO_IK_SOLUTION;
+    return false;
+    /////////////////////////////////////////////////////
+
 
     // use weighted absolute deviations to determine the solution closest the seed state
     std::vector<idx_double> weighted_diffs;

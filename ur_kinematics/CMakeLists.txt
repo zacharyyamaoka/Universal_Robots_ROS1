@@ -50,6 +50,9 @@ set_target_properties(ur5_kin PROPERTIES COMPILE_DEFINITIONS "UR5_PARAMS")
 add_library(ur5e_kin src/ur_kin.cpp)
 set_target_properties(ur5e_kin PROPERTIES COMPILE_DEFINITIONS "UR5e_PARAMS")
 
+add_library(ur5ef_kin src/ur_kin.cpp)
+set_target_properties(ur5ef_kin PROPERTIES COMPILE_DEFINITIONS "UR5e_PARAMS")
+
 add_library(ur10_kin src/ur_kin.cpp)
 set_target_properties(ur10_kin PROPERTIES COMPILE_DEFINITIONS "UR10_PARAMS")
 
@@ -101,6 +104,12 @@ target_link_libraries(ur5e_moveit_plugin ur5e_kin ${Boost_LIBRARIES} ur_kinemati
 ament_target_dependencies(ur5e_moveit_plugin
   rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
 
+  add_library(ur5ef_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
+set_target_properties(ur5ef_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR5e_PARAMS;UR_ROBOT;FULL")
+target_link_libraries(ur5ef_moveit_plugin ur5ef_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
+ament_target_dependencies(ur5ef_moveit_plugin
+  rclcpp tf2_kdl moveit_msgs geometry_msgs pluginlib tf2_geometry_msgs moveit_core moveit_kinematics moveit_ros_planning Boost )
+
 add_library(ur10_moveit_plugin SHARED src/ur_moveit_plugin.cpp)
 set_target_properties(ur10_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR10_PARAMS;UR_ROBOT")
 target_link_libraries(ur10_moveit_plugin ur10_kin ${Boost_LIBRARIES} ur_kinematics_parameters)
@@ -140,8 +149,8 @@ ament_target_dependencies(ur30_moveit_plugin
 install(TARGETS
   dummy_dh_kin dummy_dh_moveit_plugin
   bam_arm_kin bam_arm_moveit_plugin
-  ur3_kin ur3e_kin ur5_kin ur5e_kin ur10_kin ur10e_kin ur16e_kin ur20_kin ur30_kin
-  ur3_moveit_plugin ur3e_moveit_plugin ur5_moveit_plugin ur5e_moveit_plugin
+  ur3_kin ur3e_kin ur5_kin ur5e_kin ur5ef_kin ur10_kin ur10e_kin ur16e_kin ur20_kin ur30_kin
+  ur3_moveit_plugin ur3e_moveit_plugin ur5_moveit_plugin ur5e_moveit_plugin ur5ef_moveit_plugin
   ur10_moveit_plugin ur10e_moveit_plugin ur16e_moveit_plugin ur20_moveit_plugin ur30_moveit_plugin
   ur_kinematics_parameters
   EXPORT ${PROJECT_NAME}Targets
